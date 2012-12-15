@@ -7,17 +7,19 @@ void testApp::setup(){
 
 	display_gui_ = true;
 
-	draw_island_button_.setup("Island", 5, ofVec2f(20, 20), ofVec2f(30, 20));;
+	draw_island_button_.setup("Island", 5, ofVec2f(20, 20), ofVec2f(30, 20));
 	drawing_islands_ = false;
 
-	put_refinery_button_.setup("Refinery", 5, ofVec2f(20, 60), ofVec2f(30, 20));;
+	put_refinery_button_.setup("Refinery", 5, ofVec2f(20, 60), ofVec2f(30, 20));
 	putting_refineries_ = false;
 
-	put_city_button_.setup("City", 5, ofVec2f(20, 100), ofVec2f(30, 20));;
+	put_city_button_.setup("City", 5, ofVec2f(20, 100), ofVec2f(30, 20));
 	putting_cities_ = false;
 
-	put_starting_point_button_.setup("Start", 5, ofVec2f(20, 140), ofVec2f(30, 20));;
+	put_starting_point_button_.setup("Start", 5, ofVec2f(20, 140), ofVec2f(30, 20));
 	putting_starting_points_ = false;
+
+	save_button_.setup("Save", 5, ofVec2f(20, 180), ofVec2f(30, 20));
 
 }
 
@@ -48,6 +50,24 @@ void testApp::draw(){
 	if(islands_.size() > 0){
 		for(int i = 0; i < islands_.size(); i++)
 			islands_[i].draw();
+	}
+
+	ofSetColor(0, 0, 0);
+	if(refineries_.size() > 0){
+		for(int i = 0; i < refineries_.size(); i++)
+			ofRect(refineries_[i].x, refineries_[i].y, 5, 5);
+	}
+
+	ofSetColor(0, 0, 255);
+	if(cities_.size() > 0){
+		for(int i = 0; i < cities_.size(); i++)
+			ofRect(cities_[i].x, cities_[i].y, 5, 5);
+	}
+
+	ofSetColor(0, 255, 0);
+	if(starting_points_.size() > 0){
+		for(int i = 0; i < starting_points_.size(); i++)
+			ofRect(starting_points_[i].x, starting_points_[i].y, 5, 5);
 	}
 
 	ofSetColor(128, 128, 128);
@@ -136,6 +156,30 @@ void testApp::mousePressed(int x, int y, int button){
 
 		if(put_starting_point_button_.isUnderPoint(ofVec2f(x, y)) && !putting_refineries_ && !putting_cities_ && !drawing_islands_){
 			putting_starting_points_ = !putting_starting_points_;
+			return;
+		}
+
+		if(save_button_.isUnderPoint(ofVec2f(x, y)) && !putting_refineries_ && !putting_cities_ && !drawing_islands_ && !putting_starting_points_){
+			
+			ofxXmlSettings scenario;
+
+			int lastTagNumber;
+
+			for(int i = 0; i < islands_.size(); i++){
+				if(scenario.pushTag("ISLAND", lastTagNumber) ){
+
+					for(int j = 0; j < islands_[i].island_shape_points_.size(); j++){
+						int tagNum = XML.addTag("PT");
+						XML.setValue("PT:X", islands_[i].island_shape_points_[j].x, tagNum);
+						XML.setValue("PT:Y", islands_[i].island_shape_points_[j].y, tagNum);
+					}
+
+					XML.popTag();
+				}
+			}
+
+			scenario.saveFile("scenario.xml");
+
 			return;
 		}
 	}

@@ -49,5 +49,7 @@ class testApp : public ofBaseApp{
 		ButtonClass put_starting_point_button_;
 		bool putting_starting_points_;
 
+		ButtonClass save_button_;
+
 };
 
