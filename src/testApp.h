@@ -24,9 +24,7 @@ class testApp : public ofBaseApp{
 		void mouseReleased(int x, int y, int button);
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
-		void gotMessage(ofMessage msg);		
-
-		ofxXmlSettings XML;
+		void gotMessage(ofMessage msg);
 
 		vector<Island> islands_;
 		vector<ofVec2f> island_points_;
@@ -50,6 +48,6 @@ class testApp : public ofBaseApp{
 		bool putting_starting_points_;
 
 		ButtonClass save_button_;
-
+		ofxXmlSettings scenario_xml_;
 };
 
